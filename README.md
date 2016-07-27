@@ -11,11 +11,7 @@ More about plus signs in e-mail addresses [on StackExchange](http://security.sta
 
 ## Installation & Usage
 1. Install the required modules:
-    ```sh
-    $ npm install
-    ```
+    ```$ npm install```
 2. Open *index.js* and edit the settings at the top of the file.
 3. Run the script:
-    ```sh
-    $ npm run start
-    ```
+    ```$ npm run start```
