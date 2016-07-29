@@ -6,6 +6,11 @@ This project was started as a proof of concept: even multi-billion dollar compan
 
 More about plus signs in e-mail addresses [on StackExchange](http://security.stackexchange.com/questions/65244/what-are-the-security-reasons-for-disallowing-the-plus-sign-in-email-addresses).
 
+If you're using Gmail and want to automatically verify all accounts, use this gist: https://gist.github.com/sebastienvercammen/e7e0e9e57db246d7f941b789d8508186
+
+**Warning: The generator does not look for account names or e-mail addresses that are already in use.**
+If the login is already in use, it will still store the login data in `outputFile`, even if it won't work.
+
 ## Requirements
 ### Prerequisites
 * [Node.js](https://nodejs.org/en/)
@@ -16,8 +21,6 @@ The binary paths of all three prerequisites must be added to your OS' PATH envir
 `phantomjs -v` and `casperjs --version` accessible from commandline.
 
 ## Usage
-**Warning: The generator does not look for account names or e-mail addresses that are already in use.**
-If the login is already in use, it will still store the login data in `outputFile`, even if it won't work.
 
 1. Open [index.js](index.js) and edit the settings at the top of the file:
 2. Run the script with CasperJS:
