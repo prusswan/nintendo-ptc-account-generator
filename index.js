@@ -45,62 +45,7 @@ console.log('[o] Starting ' + start + ' to ' + (end - 1) + '.');
 
 for(var i = start; i < end; i++) {
     (function(ctr) {
-        casper.thenOpen(url_ptc, function () {
-            this.echo('[' + ctr + '] First Page: ' + this.getTitle());
-            
-            this.fill('form[name="verify-age"]', {
-                'dob': dob,
-                'country': country
-            }, true);
-        }).then(function () {
-            var _pass = password;
-            var _nick = username + ctr;
-
-            var formdata = {
-                'terms': true
-            };
-
-            this.echo('[' + ctr + '] Second Page: ' + this.getTitle());
-            
-            // Random password?
-            if(useRandomPassword) {
-                 _pass = randomPassword();
-            }
-            
-            // Use nicknames list, or (username + number) combo?
-            if(useNicknamesFile) {
-                // Make sure we have a nickname left
-                if(nicknames.length < 1) {
-                    throw Error("We're out of nicknames to use!");
-                }
-                
-                // Get the first nickname off the list & use it
-                _nick = nicknames.shift();
-                
-                formdata['username'] = _nick;
-                formdata['screen_name'] = _nick;
-                formdata['email'] = email_user + '+' + _nick + '@' + email_domain;
-                formdata['confirm_email'] = email_user + '+' + _nick + '@' + email_domain;
-            } else {
-                // Use username & counter
-                formdata['username'] = _nick;
-                formdata['screen_name'] = _nick;
-                formdata['email'] = email_user + '+' + ctr + '@' + email_domain;
-                formdata['confirm_email'] = email_user + '+' + ctr + '@' + email_domain;
-            }
-
-            // Log it in the file of used nicknames
-            var content = outputFormat.replace('%NICK%', _nick).replace('%PASS%', _pass);
-            fs.write(outputFile, content, 'a');
-            
-            formdata['password'] = _pass;
-            formdata['confirm_password'] = _pass;
-            
-            // Fill & submit
-            this.fill('form#user-signup-create-account-form', formdata, true);
-        }).then(function() {
-            this.echo('Finished ' + ctr + '.');
-        });
+        casper.thenOpen(url_ptc, handleDobPage.bind(casper, ctr)).then(handleSignupPage.bind(casper, ctr)).then(handleFinished.bind(casper, ctr));
     })(i);
 }
 
@@ -108,4 +53,75 @@ casper.run();
 
 function randomPassword() {
     return Math.random().toString(36).substr(2, 8);
+}
+
+// Pages
+function handleDobPage(ctr) {
+    this.echo('[' + ctr + '] First Page: ' + this.getTitle());
+    
+    this.fill('form[name="verify-age"]', {
+        'dob': dob,
+        'country': country
+    }, true);
+}
+
+function handleSignupPage(ctr) {
+    // Server sometimes messes up and redirects us to the verify-age page again
+    if(this.exists('form[name="verify-age"]')) {
+        this.echo('[' + ctr + '] Server is acting up. Retrying...');
+        handleDobPage.call(this, ctr);
+        this.then(handleSignupPage.bind(casper, ctr));
+        return;
+    }
+    
+    // OK we're on the right page
+    var _pass = password;
+    var _nick = username + ctr;
+
+    var formdata = {
+        'terms': true
+    };
+
+    this.echo('[' + ctr + '] Second Page: ' + this.getTitle());
+    
+    // Random password?
+    if(useRandomPassword) {
+         _pass = randomPassword();
+    }
+    
+    // Use nicknames list, or (username + number) combo?
+    if(useNicknamesFile) {
+        // Make sure we have a nickname left
+        if(nicknames.length < 1) {
+            throw Error("We're out of nicknames to use!");
+        }
+        
+        // Get the first nickname off the list & use it
+        _nick = nicknames.shift();
+        
+        formdata['username'] = _nick;
+        formdata['screen_name'] = _nick;
+        formdata['email'] = email_user + '+' + _nick + '@' + email_domain;
+        formdata['confirm_email'] = email_user + '+' + _nick + '@' + email_domain;
+    } else {
+        // Use username & counter
+        formdata['username'] = _nick;
+        formdata['screen_name'] = _nick;
+        formdata['email'] = email_user + '+' + ctr + '@' + email_domain;
+        formdata['confirm_email'] = email_user + '+' + ctr + '@' + email_domain;
+    }
+
+    // Log it in the file of used nicknames
+    var content = outputFormat.replace('%NICK%', _nick).replace('%PASS%', _pass);
+    fs.write(outputFile, content, 'a');
+    
+    formdata['password'] = _pass;
+    formdata['confirm_password'] = _pass;
+    
+    // Fill & submit
+    this.fill('form#user-signup-create-account-form', formdata, true);
+}
+
+function handleFinished(ctr) {
+    this.echo('Finished ' + ctr + '.');
 }
