@@ -1,5 +1,8 @@
 // Requires
-var casper = require('casper').create();
+var casper = require('casper').create({
+    verbose: false,
+    logLevel: "debug"
+});
 var nicknames = require('./nicknames.json');
 var fs = require('fs');
 

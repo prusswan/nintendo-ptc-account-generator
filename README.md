@@ -40,7 +40,7 @@ In [index.js](index.js):
 * Set `var useRandomPassword = true;` in [index.js](index.js).
 
 ### 3. Use a list of unique usernames instead of USERx combinations.
-The list of unique usernames must be stores in [nicknames.json](nicknames.json). An example is available on the repo.
+The list of unique usernames must be stored in [nicknames.json](nicknames.json). An example is available on the repo.
 
 To create a number of accounts with custom usernames instead of user + number combinations, change [index.js](index.js):
 
