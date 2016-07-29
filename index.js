@@ -11,7 +11,7 @@ var start = 0; // Start from x (NAMEx, EMAIL+x@domain.com)
 var end = 10;  // Up to x, but not including (exclusive)
 
 var useNicknamesFile = false;        // Use nicknames file, or just append numbers to username?
-var useRandomPassword = false;       // Generate a random password?
+var useRandomPassword = true;       // Generate a random password?
 
 var outputFile = 'accounts.txt';        // File which will contain the generated "username password" combinations.
 var outputFormat = '%NICK% %PASS%\r\n'; // Format used to save the account data in outputFile. Supports %NICK%, %PASS%.
