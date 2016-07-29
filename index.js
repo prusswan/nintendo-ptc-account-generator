@@ -10,7 +10,7 @@ var fs = require('fs');
 var start = 0; // Start from x (NAMEx, EMAIL+x@domain.com)
 var end = 10;  // Up to x, but not including (exclusive)
 
-var useNicknamesFile = true;        // Use nicknames file, or just append numbers to username?
+var useNicknamesFile = false;        // Use nicknames file, or just append numbers to username?
 var useRandomPassword = true;       // Generate a random password?
 
 var outputFile = 'accounts.txt';        // File which will contain the generated "username password" combinations.
