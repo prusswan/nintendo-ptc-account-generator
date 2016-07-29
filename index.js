@@ -11,7 +11,7 @@ var start = 0; // Start from x (NAMEx, EMAIL+x@domain.com)
 var end = 10;  // Up to x, but not including (exclusive)
 
 var useNicknamesFile = false;        // Use nicknames file, or just append numbers to username?
-var useRandomPassword = true;       // Generate a random password?
+var useRandomPassword = false;       // Generate a random password?
 
 var outputFile = 'accounts.txt';        // File which will contain the generated "username password" combinations.
 var outputFormat = '%NICK% %PASS%\r\n'; // Format used to save the account data in outputFile. Supports %NICK%, %PASS%.
@@ -21,10 +21,29 @@ var dob = '1990-12-30';             // Date of birth, YYYY-mm-dd
 var username = 'user';              // User- & display name. Make sure any "(username + number)@domain.com" is 100% unique.
 var password = 'pass';              // Static password for all accounts. Ignored if useRandomPassword is true.
 var email_user = 'email';           // If your email is email@domain.com, enter "email"
-var email_domain = 'domain.com';   // Domain of e-mail host
+var email_domain = 'domain.com';    // Domain of e-mail host
 
 // App data
 var url_ptc = 'https://club.pokemon.com/us/pokemon-trainer-club/sign-up/';
+
+// Settings check
+if (!useNicknamesFile && (username + end).length > 16) {
+    console.log("Error: length of username + number can't be longer than 16 characters.");
+    console.log("Please use a shorter nickname.");
+    process.exit();
+}
+
+if ((email_user + '+' + username + end + '@' + email_domain).length > 75) {
+    console.log("Error: length of e-mail address including the + trick can't be longer than 75 characters.");
+    console.log("Please use a shorter e-mail address and/or nickname.");
+    process.exit();
+}
+
+if (!useRandomPassword && password.length > 15) {
+    console.log("Error: length of password can't be longer than 15 characters.");
+    console.log("Please use a shorter password.");
+    process.exit();
+}
 
 // LETSAHGO
 casper.start();
